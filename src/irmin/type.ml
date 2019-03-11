@@ -672,7 +672,7 @@ let encode_json = Encode_json.t
 let pp_json ?minify t ppf x =
   let buf = Buffer.create 42 in
   let e = Jsonm.encoder ?minify (`Buffer buf) in
-  let wrap_and_encode () = encode_json (list t) e [x] in
+  let wrap_and_encode () = encode_json t e x in
   let encode () = encode_json t e x in
   let () = match t with
     | Prim _    -> wrap_and_encode ()
@@ -1076,7 +1076,7 @@ module Decode_json = struct
 
   let char e =
     lexeme e >>= function
-    | `String s when String.length s = 1 -> Ok (String.get s 1)
+    | `String s when String.length s = 1 -> Ok (String.get s 0)
     | l -> error e l "`String[1]"
 
   let int32 e = float e >|= Int32.of_float
